@@ -1,0 +1,21 @@
+{
+  "name": "azurlane-discord-bot",
+  "version": "1.0.0",
+  "description": "Azur Lane ship info Discord bot using AzurAPI",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js",
+    "deploy-commands": "tsc && node dist/deploy-commands.js"
+  },
+  "dependencies": {
+    "@azurapi/azurapi": "^1.1.2",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "typescript": "^5.3.3"
+  }
+}
