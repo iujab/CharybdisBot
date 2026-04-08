@@ -1,9 +1,9 @@
 import {
   ChatInputCommandInteraction,
   SlashCommandBuilder,
-  ComponentType,
-  InteractionResponse,
   Message,
+  ActionRowBuilder,
+  MessageActionRowComponentBuilder,
 } from 'discord.js';
 import { AzurAPI } from '@azurapi/azurapi';
 import { buildOverviewEmbed } from '../embeds/overview';
@@ -12,7 +12,7 @@ import { buildSkillsEmbed } from '../embeds/skills';
 import { buildConstructionEmbed } from '../embeds/construction';
 import { buildSkinEmbed, getSkinCount } from '../embeds/skins';
 import { createPageSelectRow } from '../utils/pagination';
-import { createSkinButtons } from '../utils/carousel';
+import { createSkinSelect } from '../utils/carousel';
 
 const TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -43,10 +43,16 @@ function getPageEmbed(ship: any, page: number, skinIndex: number) {
   }
 }
 
-function getComponents(page: number, skinIndex: number, totalSkins: number) {
-  const rows = [createPageSelectRow(page)];
+function getComponents(
+  ship: any,
+  page: number,
+  skinIndex: number
+): ActionRowBuilder<MessageActionRowComponentBuilder>[] {
+  const rows: ActionRowBuilder<MessageActionRowComponentBuilder>[] = [
+    createPageSelectRow(page),
+  ];
   if (page === 4) {
-    rows.push(createSkinButtons(skinIndex, totalSkins));
+    rows.push(createSkinSelect(ship, skinIndex));
   }
   return rows;
 }
@@ -83,7 +89,7 @@ export async function execute(
   const totalSkins = getSkinCount(ship);
 
   const embed = getPageEmbed(ship, currentPage, currentSkin);
-  const components = getComponents(currentPage, currentSkin, totalSkins);
+  const components = getComponents(ship, currentPage, currentSkin);
 
   const reply = await interaction.editReply({
     embeds: [embed],
@@ -96,36 +102,32 @@ export async function execute(
       : await interaction.fetchReply();
 
   const collector = message.createMessageComponentCollector({
-    componentType: ComponentType.Button,
     time: TIMEOUT_MS,
     filter: (i) => i.user.id === interaction.user.id,
   });
 
   collector.on('collect', async (i) => {
-    const id = i.customId;
-
-    // Tab buttons (direct page jump)
-    if (id.startsWith('tab_')) {
-      const tabIndex = parseInt(id.split('_')[1], 10);
-      if (!isNaN(tabIndex) && tabIndex >= 0 && tabIndex <= 4) {
-        currentPage = tabIndex;
-        if (currentPage !== 4) {
-          currentSkin = 0; // reset skin index when leaving skins page
+    if (i.isButton()) {
+      const id = i.customId;
+      // Tab buttons (direct page jump)
+      if (id.startsWith('tab_')) {
+        const tabIndex = parseInt(id.split('_')[1], 10);
+        if (!isNaN(tabIndex) && tabIndex >= 0 && tabIndex <= 4) {
+          currentPage = tabIndex;
+          if (currentPage !== 4) {
+            currentSkin = 0; // reset skin index when leaving skins page
+          }
         }
+      }
+    } else if (i.isStringSelectMenu() && i.customId === 'skin_select') {
+      const idx = parseInt(i.values[0], 10);
+      if (!isNaN(idx) && idx >= 0 && idx < totalSkins) {
+        currentSkin = idx;
       }
     }
 
-    // Skin carousel buttons
-    if (id === 'skin_prev' && currentSkin > 0) {
-      currentSkin--;
-    } else if (id === 'skin_next' && currentSkin < totalSkins - 1) {
-      currentSkin++;
-    } else if (id === 'skin_back') {
-      currentPage = 0; // go back to overview
-    }
-
     const newEmbed = getPageEmbed(ship, currentPage, currentSkin);
-    const newComponents = getComponents(currentPage, currentSkin, totalSkins);
+    const newComponents = getComponents(ship, currentPage, currentSkin);
 
     await i.update({
       embeds: [newEmbed],
@@ -136,9 +138,9 @@ export async function execute(
   collector.on('end', async () => {
     try {
       const disabledComponents = getComponents(
+        ship,
         currentPage,
-        currentSkin,
-        totalSkins
+        currentSkin
       ).map((row) => {
         const newRow = new (row.constructor as any)();
         newRow.addComponents(
