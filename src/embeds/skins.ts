@@ -1,5 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 import { getRarityColor } from "../utils/format";
+import { Emojis } from "../utils/emojis";
 
 export function buildSkinEmbed(ship: any, skinIndex: number): EmbedBuilder {
   const skin = ship.skins[skinIndex];
@@ -8,7 +9,7 @@ export function buildSkinEmbed(ship: any, skinIndex: number): EmbedBuilder {
   const fields = [
     {
       name: "Cost",
-      value: skin.info.cost ? `${skin.info.cost} 💎` : "Free / Default",
+      value: skin.info.cost ? `${skin.info.cost} ${Emojis.gem}` : "Free / Default",
       inline: true,
     },
     {

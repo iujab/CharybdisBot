@@ -5,6 +5,7 @@ import {
   formatSlots,
   formatStat,
 } from "../utils/format";
+import { Emojis } from "../utils/emojis";
 
 export function buildStatsEmbed(ship: any): EmbedBuilder {
   const title = `${ship.names.en || ship.names.code} — Stats`;
@@ -27,11 +28,11 @@ export function buildStatsEmbed(ship: any): EmbedBuilder {
 
   const ev = ship.enhanceValue;
   const enhanceLines = [
-    `FP: ${formatStat(ev.firepower)}`,
-    `TRP: ${formatStat(ev.torpedo)}`,
-    `AVI: ${formatStat(ev.aviation)}`,
-    `RLD: ${formatStat(ev.reload)}`,
-  ].join(" / ");
+    `${Emojis.firepower} ${formatStat(ev.firepower)}`,
+    `${Emojis.torpedo} ${formatStat(ev.torpedo)}`,
+    `${Emojis.aviation} ${formatStat(ev.aviation)}`,
+    `${Emojis.reload} ${formatStat(ev.reload)}`,
+  ].join("  \u2022  ");
 
   embed
     .addFields(

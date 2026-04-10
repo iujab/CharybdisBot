@@ -1,5 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 import { getRarityColor } from "../utils/format";
+import { Emojis } from "../utils/emojis";
 
 export function buildConstructionEmbed(ship: any): EmbedBuilder {
   const title = ship.names.en || ship.names.code;
@@ -25,7 +26,7 @@ export function buildConstructionEmbed(ship: any): EmbedBuilder {
   // Scrap value
   const scrap = ship.scrapValue;
   const scrapDisplay = scrap
-    ? `💰 Coins: ${scrap.coin} | 🛢 Oil: ${scrap.oil} | 🏅 Medals: ${scrap.medal}`
+    ? `${Emojis.coin} ${scrap.coin}  \u2022  ${Emojis.oil} ${scrap.oil}  \u2022  ${Emojis.medal} ${scrap.medal}`
     : "N/A";
 
   // Fleet tech points

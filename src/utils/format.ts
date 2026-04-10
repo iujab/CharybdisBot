@@ -1,7 +1,9 @@
+import { Emojis } from "./emojis";
+
 type Rarity =
   | "Normal"
   | "Rare"
-  | "Epic"
+  | "Elite"
   | "Super Rare"
   | "Ultra Rare"
   | "Priority"
@@ -10,7 +12,7 @@ type Rarity =
 export const RARITY_COLORS: Record<Rarity, number> = {
   Normal: 0x808080,
   Rare: 0x3b82f6,
-  Epic: 0x8b5cf6,
+  Elite: 0x8b5cf6,
   "Super Rare": 0xf59e0b,
   "Ultra Rare": 0xef4444,
   Priority: 0xf59e0b,
@@ -19,6 +21,19 @@ export const RARITY_COLORS: Record<Rarity, number> = {
 
 export function getRarityColor(rarity: string): number {
   return RARITY_COLORS[rarity as Rarity] ?? 0x808080;
+}
+
+export function rarityEmoji(rarity: string): string {
+  switch (rarity) {
+    case "Normal":     return Emojis.rarityNormal;
+    case "Rare":       return Emojis.rarityRare;
+    case "Elite":      return Emojis.rarityElite;
+    case "Super Rare": return Emojis.raritySuperRare;
+    case "Ultra Rare": return Emojis.rarityUltraRare;
+    case "Priority":   return Emojis.rarityPriority;
+    case "Decisive":   return Emojis.rarityDecisive;
+    default:           return "";
+  }
 }
 
 export function formatStars(stars: { stars: string; value: number }): string {
@@ -32,14 +47,18 @@ export function formatStat(value: string | number | undefined): string {
 }
 
 export function formatStatBlock(stats: any): string {
-  const lines = [
-    [`HP: ${formatStat(stats.health)}`, `FP: ${formatStat(stats.firepower)}`],
-    [`TRP: ${formatStat(stats.torpedo)}`, `EVA: ${formatStat(stats.evasion)}`],
-    [`AA: ${formatStat(stats.antiwar)}`, `AVI: ${formatStat(stats.aviation)}`],
-    [`RLD: ${formatStat(stats.reload)}`, `SPD: ${formatStat(stats.speed)}`],
-    [`LCK: ${formatStat(stats.luck)}`, `ACC: ${formatStat(stats.accuracy)}`],
-  ];
-  return lines.map(([l, r]) => `${l.padEnd(14)}${r}`).join("\n");
+  return [
+    `${Emojis.hp} ${formatStat(stats.health)}`,
+    `${Emojis.firepower} ${formatStat(stats.firepower)}`,
+    `${Emojis.torpedo} ${formatStat(stats.torpedo)}`,
+    `${Emojis.aviation} ${formatStat(stats.aviation)}`,
+    `${Emojis.antiAir} ${formatStat(stats.antiwar)}`,
+    `${Emojis.reload} ${formatStat(stats.reload)}`,
+    `${Emojis.evasion} ${formatStat(stats.evasion)}`,
+    `${Emojis.speed} ${formatStat(stats.speed)}`,
+    `${Emojis.accuracy} ${formatStat(stats.accuracy)}`,
+    `${Emojis.luck} ${formatStat(stats.luck)}`,
+  ].join("\n");
 }
 
 export function formatSlots(slots: any[]): string {

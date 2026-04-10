@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js";
-import { getRarityColor, formatStars } from "../utils/format";
+import { getRarityColor, formatStars, rarityEmoji } from "../utils/format";
 
 export function buildOverviewEmbed(ship: any): EmbedBuilder {
   const title = ship.names.en || ship.names.code;
@@ -24,7 +24,7 @@ export function buildOverviewEmbed(ship: any): EmbedBuilder {
       { name: "Nationality", value: ship.nationality || "Unknown", inline: true },
       {
         name: "Rarity",
-        value: `${ship.rarity} ${formatStars(ship.stars)}`,
+        value: `${rarityEmoji(ship.rarity)} ${formatStars(ship.stars)}`.trim(),
         inline: true,
       },
       { name: "ID", value: ship.id || "Unknown", inline: true },
