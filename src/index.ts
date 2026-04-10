@@ -15,28 +15,37 @@ const client = new Client({
   intents: [GatewayIntentBits.Guilds],
 });
 
-const azurapi = new AzurAPI();
+async function main() {
+  console.log('Loading ship data...');
+  const azurapi = await AzurAPI.init({ fetchLatest: true });
+  console.log(`Loaded ${azurapi.ships.count()} ships`);
 
-client.once(Events.ClientReady, (readyClient) => {
-  console.log(`Logged in as ${readyClient.user.tag}`);
-});
+  client.once(Events.ClientReady, (readyClient) => {
+    console.log(`Logged in as ${readyClient.user.tag}`);
+  });
 
-client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isChatInputCommand()) return;
+  client.on(Events.InteractionCreate, async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
 
-  if (interaction.commandName === shipCommand.data.name) {
-    try {
-      await shipCommand.execute(interaction, azurapi);
-    } catch (error) {
-      console.error('Error executing /ship command:', error);
-      const content = 'Something went wrong while looking up that ship.';
-      if (interaction.deferred || interaction.replied) {
-        await interaction.editReply({ content }).catch(() => {});
-      } else {
-        await interaction.reply({ content, ephemeral: true }).catch(() => {});
+    if (interaction.commandName === shipCommand.data.name) {
+      try {
+        await shipCommand.execute(interaction, azurapi);
+      } catch (error) {
+        console.error('Error executing /ship command:', error);
+        const content = 'Something went wrong while looking up that ship.';
+        if (interaction.deferred || interaction.replied) {
+          await interaction.editReply({ content }).catch(() => {});
+        } else {
+          await interaction.reply({ content, ephemeral: true }).catch(() => {});
+        }
       }
     }
-  }
-});
+  });
 
-client.login(token);
+  await client.login(token);
+}
+
+main().catch((err) => {
+  console.error('Fatal error:', err);
+  process.exit(1);
+});
