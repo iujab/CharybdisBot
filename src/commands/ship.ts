@@ -5,7 +5,7 @@ import {
   ActionRowBuilder,
   MessageActionRowComponentBuilder,
 } from 'discord.js';
-import { AzurData as AzurAPI } from 'azurdata';
+import { AzurData as AzurAPI } from '@lycoristech/azurapi';
 import { buildOverviewEmbed } from '../embeds/overview';
 import { buildStatsEmbed } from '../embeds/stats';
 import { buildSkillsEmbed } from '../embeds/skills';

@@ -10,8 +10,7 @@
     "deploy-commands": "tsc && node dist/deploy-commands.js"
   },
   "dependencies": {
-    "@azurapi/azurapi": "^1.1.2",
-    "azurdata": "file:../azurLaneAPI",
+    "@lycoristech/azurapi": "^0.0.1",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.1"
   },
