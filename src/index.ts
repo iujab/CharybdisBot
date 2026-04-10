@@ -1,5 +1,5 @@
 import { Client, Events, GatewayIntentBits } from 'discord.js';
-import { AzurAPI } from '@azurapi/azurapi';
+import { AzurData as AzurAPI } from 'azurdata';
 import * as dotenv from 'dotenv';
 import * as shipCommand from './commands/ship';
 
