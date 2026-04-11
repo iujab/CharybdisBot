@@ -10,7 +10,7 @@
     "deploy-commands": "tsc && node dist/deploy-commands.js"
   },
   "dependencies": {
-    "@lycoristech/azurapi": "^0.0.1",
+    "@lycoristech/azurapi": "^0.0.4",
     "discord.js": "^14.14.1",
     "dotenv": "^16.4.1"
   },

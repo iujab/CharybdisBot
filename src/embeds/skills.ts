@@ -3,8 +3,6 @@ import { getRarityColor, truncate } from "../utils/format";
 
 const SKILL_COLOR_EMOJIS: Record<string, string> = {
   red: "\uD83D\uDD34",
-  pink: "\uD83D\uDD34",
-  gold: "\uD83D\uDFE1",
   yellow: "\uD83D\uDFE1",
   blue: "\uD83D\uDD35",
 };
