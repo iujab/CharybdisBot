@@ -15,14 +15,15 @@ export function buildStatsEmbed(ship: any): EmbedBuilder {
     .setColor(getRarityColor(ship.rarity))
     .setThumbnail(ship.thumbnail)
     .addFields(
-      { name: "Level 100 Stats", value: formatStatBlock(ship.stats.level100) },
-      { name: "Level 120 Stats", value: formatStatBlock(ship.stats.level120) },
+      { name: "Level 100 Stats", value: formatStatBlock(ship.stats.level100), inline: true },
+      { name: "Level 120 Stats", value: formatStatBlock(ship.stats.level120), inline: true },
     );
 
   if (ship.stats.level100Retrofit) {
     embed.addFields({
       name: "Level 120 Retrofit Stats",
       value: formatStatBlock(ship.stats.level120Retrofit),
+      inline: true,
     });
   }
 
