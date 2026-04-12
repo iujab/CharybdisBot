@@ -27,6 +27,14 @@ async function main() {
   client.on(Events.InteractionCreate, async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
 
+    const ts = new Date().toISOString();
+    const user = `${interaction.user.tag} (${interaction.user.id})`;
+    const guild = interaction.guild ? `${interaction.guild.name} (${interaction.guild.id})` : 'DM';
+    const opts = interaction.options.data
+      .map((o) => `${o.name}=${o.value ?? ''}`)
+      .join(' ');
+    console.log(`[${ts}] /${interaction.commandName} ${opts} | user=${user} | guild=${guild}`);
+
     if (interaction.commandName === shipCommand.data.name) {
       try {
         await shipCommand.execute(interaction, azurapi);
